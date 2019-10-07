@@ -214,9 +214,11 @@ main {
   transition: transform 0.3s ease-out;
 }
 
+/*
 .mobile-nav.open {
   transform: translateX(0);
 }
+*/
 
 .mobile-nav__item-list {
   list-style: none;
