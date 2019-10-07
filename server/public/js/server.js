@@ -101,7 +101,8 @@ app.use(bodyParser.urlencoded({extended : false}));
  */
 
     const path = require('path');
-    app.use(express.static(path.join(__dirname,'public')));
+    app.use(express.static(path.join(__dirname,'../../public')));
+    console.log(path.join(__dirname,'../../public'))
 
  /**
  *  
@@ -114,8 +115,8 @@ app.use(bodyParser.urlencoded({extended : false}));
  * Templating Engin : EJS 
  * 
  */
-    const views =  path.join(__dirname,'views')
-    console.log(views)
+    const views =  path.join(__dirname,'../../views')
+
     app.set('view engine' , 'ejs');
     app.set('views',views);
 
@@ -130,9 +131,9 @@ app.use(bodyParser.urlencoded({extended : false}));
  */
 
     // import Routes from other files 
-    const adminRoutes = require('./routes/admin');
-    const shopRoutes = require('./routes/shop');
-    const fourOFour = require('./routes/404');
+    const adminRoutes = require('../../routes/admin');
+    const shopRoutes = require('../../routes/shop');
+    const fourOFour = require('../../routes/404');
 
     app.use('/admin' , adminRoutes);
     app.use(shopRoutes);

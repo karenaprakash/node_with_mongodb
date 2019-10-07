@@ -3,9 +3,9 @@ const Product = require('../models/product');
 
 //getAddProductPage 
 exports.getAddProductPage = (req,res,next) => {
-        res.render('add-product' , {
+        res.render('admin/add-product' , {
             pageTitle : 'Add Product',
-            path : '/add-product' 
+            path : '/admin/add-product' 
         });
 };
 
@@ -20,7 +20,7 @@ exports.postAddProduct = (req,res,next) => {
 exports.getProducts = (req,res,next)=>{
     //it first complete all fetch then call our res.renderfunction 
     const products = Product.fetchAll( products => {
-        res.render('shop' , {
+        res.render('shop/product-list' , {
             pageTitle : 'Shop' , 
             path : '/' ,
             products : products
@@ -28,3 +28,38 @@ exports.getProducts = (req,res,next)=>{
     });
    
 };
+
+//getAdminProducts
+exports.getAdminProducts = (req,res,next)=>{
+    //it first complete all fetch then call our res.renderfunction 
+    const products = Product.fetchAll( products => {
+        res.render('admin/products' , {
+            pageTitle : 'Admin Products' , 
+            path : '/admin/products' ,
+            products : products
+        });
+    });
+   
+};
+
+
+//getCart
+exports.getCart = (req,res,next)=>{
+
+    res.render('shop/cart' , {
+        pageTitle : 'Cart' , 
+        path : '/cart'
+    });
+   
+};
+
+//getCart
+exports.getCheckout = (req,res,next)=>{
+
+    res.render('shop/checkout' , {
+        pageTitle : 'Checkout' , 
+        path : '/checkout'
+    });
+   
+};
+
