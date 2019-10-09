@@ -6,32 +6,12 @@ const app = express();
 const bodyParser = require('body-parser');
 app.use(bodyParser.urlencoded({extended : false}));
 
-/**
- * 
- * Middleware Example
- * 
- */
+//mysql database 
+const sequelize = require('../../utils/database');
 
-    /*
-
-    app.use((req,res,next) => {
-        console.log('in first middleware!');
-        next() // Allows the request to continue to the next middleware in the line 
-    })
-
-    app.use((req,res,next) => {
-        console.log('in second middleware!');
-        //we can directly send response in any formate like html,json or etc..
-        res.send('Hello World!') // Allows us to send response directly using send().
-    })
-
-    */
-
-/**
- * 
- * Middleware Example End 
- * 
- */
+//our models 
+const Product = require('../../models/product');
+const User = require('../../models/user');
 
  /**
  * 
@@ -39,60 +19,6 @@ app.use(bodyParser.urlencoded({extended : false}));
  * 
  */
 
-    /*
-
-    //Products page : we have to define '/products' before '/' 
-    app.use('/products',(req,res,next)=>{
-        res.send('<H1> Product Page </h1>');
-    })
-
-    //we can pass our route as first argument in use method 
-    app.use('/',(req,res,next)=>{
-        res.send('<H1> Home Page </h1>');
-    })
-
-    */
-
- /**
- * 
- * Route With Middleware End
- * 
- */
-
- /**
- * 
- * Handling Request and Response 
- * 1. res.redirect -> redirect
- * 2. req.body  -> for access request body  use body-parser
- * 3. use get , post , patch , delete and put  insted of use in app.use() 
- * 
- */
-    /*
-
-    //Products page : we have to define '/products' before '/' 
-    app.get('/add-product',(req,res,next)=>{
-        res.send('<form action="/add-product" method="post"><input type="text" name="title" /> <button>Add Product</button></form>');
-    })
-
-    app.post('/add-product',(req,res,next)=>{
-        //we can not directly access req.body for that we need to use thired party library called body-parser.So,install it using npm install --save body-parser 
-        //check line 6 and 7
-        console.log(req.body);
-        res.redirect('/'); // we can redirect to other routes as well using redirect
-    })
-
-    //we can pass our route as first argument in use method 
-    app.get('/',(req,res,next)=>{
-        res.send('<H1> Home Page </h1>');
-    })
-
-    */
-
- /**
- * 
- * Handling Request and Response End
- * 
- */
 
  /**
  *  
@@ -119,6 +45,38 @@ app.use(bodyParser.urlencoded({extended : false}));
 
     app.set('view engine' , 'ejs');
     app.set('views',views);
+ /**
+ *  
+ * Templating Engin End
+ * 
+ */
+
+/**
+ *  
+ * Mysql Database 
+ * 
+ */
+    
+
+ /**
+ *  
+ * Mysql Database End 
+ * 
+ */
+
+//middleware for accessing user data globelly so we can create products associates with this user.
+
+app.use((req,res,next)=>{
+    User.findByPk(1)
+    .then(user => {
+        console.log(user)
+        req.user = user;
+        next();
+    })
+    .catch(err => console.log(err));
+})
+
+
 
  /**
  *  
@@ -147,7 +105,31 @@ app.use(bodyParser.urlencoded({extended : false}));
 
 
 
-const port = process.env.PORT || 3003;
-app.listen(port,()=>{
-    console.log('SERVER IS RUNNING.')
+Product.belongsTo(User,{constrints: true,onDelete : 'CASCADE'});
+User.hasMany(Product); 
+
+
+sequelize
+.sync()
+//.sync({force:true})
+.then( result => {
+    return User.findByPk(1);
 })
+.then( user => {
+    if(!user){
+       return User.create({name: 'Prakash' , email : 'karenaprakash14@gmail.com'});
+    }
+    return user;
+})
+.then(user => {
+   // console.log(user);
+   //console.log(result)
+   const port = process.env.PORT || 3003;
+   app.listen(port,()=>{
+       console.log('SERVER IS RUNNING.')
+   })
+})
+.catch( err => {
+    console.log(err)   
+});
+

@@ -1,5 +1,5 @@
 1. npm init
-2. npm install --save express
+2. npm install --save express mysql2 sequelize 
 3. create server/server.js
 4. changes in package.js
 
@@ -67,5 +67,49 @@ app.listen(port,()=>{
 15. store data into file and fetch data from the file 
     
 
+16. store data into mysql database 
+
+    npm install --save mysql2
+
+    create database.js file in utils folder
+============
+    const mysql = require('mysql2');
+
+    const pool = mysql.createPool({
+        host : 'localhost',
+        user : 'root',
+        database : 'node-demo-one',
+        password : 'root'
+    });
+
+    module.exports = pool.promise();
+============
+USE DATABASE IN SERVER 
+
+1.  mysql -u root -p
+2. use node_demo_one
+3. create table products(id int NOT NUll AUTO_INCREMENT, name VARCHAR(200), imageUrl VARCHAR(250) ,price DOUBLE NOT NULL, description TEXT NOT NULL, PRIMARY KEY('id') );
+4. INSERT INTO products ( id , imageUrl , price , description , name ) VALUES (1,"https://bit.ly/2OxLNLN",5,'this is first product.','Shirt');
+5.  //example to fetch all products from database 
+    db.execute('SELECT * FROM products;')
+    .then( result => {
+        console.log(result[0])
+    })
+    .catch( err => {
+        console.log(err)
+    }); 
+
+=============
+
+Sequelize : the Object Relational Mapping Library 
+
+npm install --save sequelize
+
+Create sequelize object;
+
+add sequelize to server.js 
 
 
+========
+
+Association : relations between table 

@@ -12,8 +12,11 @@ exports.getAddProductPage = (req,res,next) => {
 //postAddProduct
 exports.postAddProduct = (req,res,next) => {
     const product = new Product(req.body.title);
-    product.save();
-    res.redirect('/'); // we can redirect to other routes as well using redirect
+    product.save()
+    .then(
+        res.redirect('/')
+    )
+    .catch( err => console.log(err) );   
 };
 
 //getProducts
