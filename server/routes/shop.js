@@ -24,10 +24,12 @@ router.post('/orders', postOrders);
 //Orders page
 router.get('/orders', getOrders);
 
+//Product  : we have to define '/product' => GET 
+router.get('/products/:productId', getProduct )
+
 //Products  : we have to define '/products' => GET 
 router.get('/products', getProducts )
 
-//Products  : we have to define '/products' => GET 
-router.get('/products/:productId', getProduct )
+
 
 module.exports = router;

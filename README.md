@@ -110,3 +110,36 @@ Create sequelize object;
 add sequelize to server.js 
 
   1. Association : relations between tables 
+
+
+===================
+
+19. Mongodb Atlas : free cloud service  with mongodb driver 
+
+
+
+
+step a: npm install --save mongodb 
+
+=====
+step a: server/utils/database.js
+
+  create database.js 
+
+
+ mongoConnect((client) => {
+     console.log(client)
+    const port = process.env.PORT || 3003;
+    app.listen(port,()=>{
+        console.log('SERVER IS RUNNING.')
+    })
+ })
+
+
+
+
+step b: mongodb atlas as cloud hosting 
+
+step c: install mongodb compass  sudo dpkg -i mongodb-compass_1.19.12_amd64.deb 
+
+

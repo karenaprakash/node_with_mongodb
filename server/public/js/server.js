@@ -6,16 +6,9 @@ const app = express();
 const bodyParser = require('body-parser');
 app.use(bodyParser.urlencoded({extended : false}));
 
-//mysql database 
-const sequelize = require('../../utils/database');
-
-//our models 
-const Product = require('../../models/product');
+//mongodb Conection 
+const {mongoConnect} = require('../../utils/database');
 const User = require('../../models/user');
-const Cart = require('../../models/cart');
-const CartItem = require('../../models/cart_item');
-const Order = require('../../models/order');
-const OrderItem = require('../../models/order_item');
 
  /**
  * 
@@ -68,18 +61,16 @@ const OrderItem = require('../../models/order_item');
  * 
  */
 
-//middleware for accessing user data globelly so we can create products associates with this user.
-
-app.use((req,res,next)=>{
-    User.findByPk(1)
-    .then(user => {
-        console.log(user)
-        req.user = user;
+ app.use((req,res,next) => {
+     User.findById('5d9f1735326b035ed76ff7b8')
+     .then(user => {
+         console.log(user._id)
+        req.user = new User(user.name,user.email,user.cart,user._id);
         next();
-    })
-    .catch(err => console.log(err));
-})
-
+     })
+     .catch(err => console.log(err));
+    // next();
+ })
 
 
  /**
@@ -91,58 +82,32 @@ app.use((req,res,next)=>{
  * 4. static module of express which allows us to access some static folders in our application
  * 
  */
+ // import Routes from other files 
+ const adminRoutes = require('../../routes/admin');
+ const shopRoutes = require('../../routes/shop');
 
-    // import Routes from other files 
-    const adminRoutes = require('../../routes/admin');
-    const shopRoutes = require('../../routes/shop');
+ app.use('/admin' , adminRoutes);
+ app.use(shopRoutes);
+
+ /*
+   
     const fourOFour = require('../../routes/404');
 
-    app.use('/admin' , adminRoutes);
-    app.use(shopRoutes);
     app.use(fourOFour);
 
+*/
+   
  /**
  *  
  * Routing End 
  * 
  */
 
-Product.belongsTo(User,{constrints: true,onDelete : 'CASCADE'});
-User.hasMany(Product); 
-User.hasOne(Cart);
-Cart.belongsTo(User);
-Cart.belongsToMany(Product,{ through: CartItem });
-Product.belongsToMany(Cart,{ through: CartItem });
-Order.belongsTo(User);
-User.hasMany(Order);
-Order.belongsToMany(Product , { through : OrderItem });
+ mongoConnect(() => {
 
-
-
-sequelize
-.sync()
-//.sync({force:true})
-.then( result => {
-    return User.findByPk(1);
-})
-.then( user => {
-    if(!user){
-       return User.create({name: 'Prakash' , email : 'karenaprakash14@gmail.com'});
-    }
-    return user;
-})
-.then(user => {
-   // console.log(user);
-   //console.log(result)
-   return user.createCart();
-})
-.then(cart => {
     const port = process.env.PORT || 3003;
-   app.listen(port,()=>{
-       console.log('SERVER IS RUNNING.')
-   })
-})
-.catch( err => {
-    console.log(err)   
-});
+    app.listen(port,()=>{
+        console.log('SERVER IS RUNNING.')
+    })
+ })
 
