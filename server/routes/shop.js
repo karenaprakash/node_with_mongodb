@@ -2,7 +2,7 @@ const express = require('express');
 //importing html files from views 
 
 const router = express.Router();
-const {getProducts , getCart , postCart , getCheckout , getIndex , getProduct , postCartDeleteItem } = require('../controllers/shop');
+const {getProducts , getCart , postCart , postOrders , getOrders, getIndex , getProduct , postCartDeleteItem } = require('../controllers/shop');
 
 //Home Page
 router.get('/', getIndex );
@@ -17,8 +17,12 @@ router.post('/cart', postCart);
 
 router.post('/cart-delete-item', postCartDeleteItem);
 
+
 //Checkout Page
-router.get('/checkout', getCheckout);
+router.post('/orders', postOrders);
+
+//Orders page
+router.get('/orders', getOrders);
 
 //Products  : we have to define '/products' => GET 
 router.get('/products', getProducts )
